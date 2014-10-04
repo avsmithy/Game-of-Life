@@ -1,0 +1,21 @@
+{
+  "curly": true,
+  "eqeqeq": true,
+  "forin": true,
+  "freeze": true,
+  "immed": true,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "nonbsp": true,
+  "nonew": true,
+  "unused": true,
+  "undef": true,
+  "sub": true,
+  "maxlen": 80,
+  "predef": [
+    "window", "document", "console",
+    "define", "require", "requirejs",
+    "describe", "it", "expect", "pending", "done", "beforeEach", "afterEach"
+  ]
+}

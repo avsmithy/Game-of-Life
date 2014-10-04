@@ -1,0 +1,21 @@
+{
+  "name": "game-of-life",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.html",
+  "license": "ISC",
+  "homepage": "https://github.com/avsmithy/CV-Examples",
+  "authors": [
+    "Alexander V Smith"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "requirejs": "~2"
+  }
+}
