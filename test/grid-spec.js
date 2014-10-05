@@ -1,6 +1,10 @@
 define(['Grid'], function(Grid) {
   describe("Grid", function() {
 
+    // TODO make dryer
+    // e.g. save some common arrays
+    // quicker constructor/beforeEach
+
     describe('constructor', function() {
 
       it('generates a 2d array', function() {
@@ -25,6 +29,53 @@ define(['Grid'], function(Grid) {
 
       });
 
+    });
+
+    describe('.getArray', function() {
+      it('get a 2d array', function() {
+
+        var grid = new Grid(3),
+            array = grid.getArray();
+
+        expect(array[0]).toEqual([undefined, undefined, undefined]);
+
+      });
+    });
+
+    describe('.setArray', function() {
+      it('sets the array', function() {
+
+        var grid = new Grid(3),
+            arr = [ [true, false, true],
+                    [false, false, false],
+                    [false, false, false]];
+
+        grid.setArray(arr);
+        expect(grid.getArray()[0]).toEqual([true, false, true]);
+
+      });
+    });
+
+    describe('.cloneArray', function() {
+      it('deep clones the array', function() {
+
+        var newArr, grid = new Grid(2);
+        arr = [ [true, false],
+                [false, true]];
+
+        grid.setArray(arr);
+
+        // Clone the original grid
+        newArr = grid.cloneArray();
+
+        // Modify the clone
+        newArr[0][0] = false;
+        expect(newArr).toEqual([[false, false],[false, true]]);
+
+        // Expect the original to not be modifed
+        expect(grid.getArray()).toEqual(arr);
+
+      });
     });
 
     describe('.randomise', function() {
@@ -97,6 +148,104 @@ define(['Grid'], function(Grid) {
         expect(function() {
           grid.randomise("123");
         }).toThrow();
+
+      });
+
+    });
+
+    describe('.countAliveNeighbours', function() {
+      it('counts number of alive neighbours', function() {
+
+        var grid = new Grid(3),
+
+            // Arrays with number of neighbours
+            arr0 = [[false, false, false],
+                    [false, true, false],
+                    [false, false, false]],
+
+            arr2 = [[true, false, false],
+                    [false, true, false],
+                    [false, false, true]],
+
+            arr8 = [[true, true, true],
+                    [true, true, true],
+                    [true, true, true]];
+
+        grid.setArray(arr0);
+        expect(grid.countAliveNeighbours(1,1)).toBe(0);
+
+        grid.setArray(arr2);
+        expect(grid.countAliveNeighbours(1,1)).toBe(2);
+
+        grid.setArray(arr8);
+        expect(grid.countAliveNeighbours(1,1)).toBe(8);
+
+      });
+    });
+
+    describe('.step', function() {
+
+      it('kills live cells with less than two alive neighbours (under-population)',
+      function() {
+
+        var grid = new Grid(3),
+            arr = [ [false, false, false],
+                    [false, true, false],
+                    [false, false, false]];
+
+        grid.setArray(arr);
+
+        expect(grid.getArray()[1][1]).toBe(true);
+        grid.step();
+        expect(grid.getArray()[1][1]).toBe(false);
+
+      });
+
+      it('allows cells with two or three living neighbours to survive',
+      function() {
+
+        var grid = new Grid(3),
+            arr = [ [false, false, false],
+                    [false, true, true],
+                    [true, false, false]];
+
+        grid.setArray(arr);
+
+        expect(grid.getArray()[1][1]).toBe(true);
+        grid.step();
+        expect(grid.getArray()[1][1]).toBe(true);
+
+      });
+
+      it('dead cells with 3 live neighbours should become alive (reproduction)',
+      function() {
+
+        var grid = new Grid(3),
+            arr = [ [false, false, true],
+                    [true, false, false],
+                    [true, false, false]];
+
+        grid.setArray(arr);
+
+        expect(grid.getArray()[1][1]).toBe(false);
+        grid.step();
+        expect(grid.getArray()[1][1]).toBe(true);
+
+      });
+
+      it('kills live cells with more than 3 live neighbours (overcrowding)',
+      function() {
+
+        var grid = new Grid(3),
+            arr = [ [true, false, false],
+                    [true, true, false],
+                    [true, false, true]];
+
+        grid.setArray(arr);
+
+        expect(grid.getArray()[1][1]).toBe(true);
+        grid.step();
+        expect(grid.getArray()[1][1]).toBe(false);
 
       });
 

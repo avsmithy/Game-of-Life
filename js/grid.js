@@ -1,5 +1,7 @@
 define([], function() {
 
+  var array, size;
+
   // Constructor for 2d array
   function Grid(size) {
 
@@ -8,11 +10,12 @@ define([], function() {
       throw 'size must be a number > 0';
     }
 
-    this.array = new Array(size);
+    this.size = size;
+    this.array = new Array(this.size);
 
     // TODO add context to helpers.each
-    for (var i = 0; i < this.array.length; i++) {
-      this.array[i] = new Array(size);
+    for (var i = 0; i < this.size; i++) {
+      this.array[i] = new Array(this.size);
     }
 
     return this;
@@ -26,6 +29,14 @@ define([], function() {
     this.array = array;
   };
 
+  Grid.prototype.cloneArray = function() {
+    var newArray = [], i;
+    for (i = 0; i < this.size; i++) {
+      newArray[i] = this.array[i].slice();
+    }
+    return newArray;
+  };
+
   // Tolerance is 0-100 value dictating the population size.
   // 0 is all cells dead, 100 is all cells alive.
   // Follows a normal distribution based on Math.random()?
@@ -35,7 +46,6 @@ define([], function() {
     if (typeof tolerance !== 'number' || tolerance < 0 || tolerance > 100) {
       throw 'tolerance must be a number between 0 and 100';
     }
-    tolerance = Math.round(tolerance);
 
     // Generates boolean from rng and tolerance
     function getBoolean() {
@@ -55,6 +65,79 @@ define([], function() {
     }
 
     return this;
+  };
+
+  Grid.prototype.countAliveNeighbours = function(x, y) {
+
+    var alive = 0, i = 0, j = 0;
+
+        // Set limits on loop (don't want to go over edges of grid)
+
+        // Minimum of 0
+        xMin = (x - 1 >= 0) ? x - 1 : 0,
+        yMin = (y - 1 >= 0) ? y - 1 : 0,
+
+        // Maximum of array length, -1 to correct .length to array index
+        xMax = (x + 1 <= this.size - 1) ? x + 1 : this.size - 1,
+        yMax = (y + 1 <= this.size - 1) ? y + 1 : this.size - 1;
+
+    for (i = xMin; i <= xMax; i++) {
+      for (j = yMin; j <= yMax; j++) {
+
+        // Don't count cell we are counting neighbours for
+        if (!(i === x && j === y) && this.array[i][j]) {
+          alive++;
+        }
+      }
+    }
+
+    return alive;
+  };
+
+  Grid.prototype.step = function() {
+
+    var newArray = this.cloneArray();
+
+    // Loop over rows and cells
+    for (var x = 0; x < this.array.length; x++) {
+      for (var y = 0; y < this.array[x].length; y++) {
+
+        // Get number of alive neighbours
+        var neighbours = this.countAliveNeighbours(x, y),
+            cellAlive = (this.array[x][y]) ? true : false;
+
+        // Underpopulation
+        if (neighbours < 2) {
+
+          newArray[x][y] = false;
+
+        // Survive
+        } else if (cellAlive && (neighbours === 2 || neighbours === 3)) {
+
+          newArray[x][y] = true;
+
+        // Reproduction
+        } else if (!cellAlive && neighbours === 3) {
+
+          newArray[x][y] = true;
+
+        // Overcrowding
+        } else if (cellAlive && neighbours > 3) {
+
+          newArray[x][y] = false;
+
+        // Set array to same as previous
+        } else {
+
+          newArray[x][y] = this.array[x][y];
+
+        }
+
+      }
+    }
+
+    this.setArray(newArray);
+
   };
 
   return Grid;
