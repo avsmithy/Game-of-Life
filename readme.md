@@ -1,4 +1,6 @@
 Todo
 ----
-* Performance bottlenecks are the html concat in dom.js and the painting. Use canvas.
-* Fix helpers and sort out all the loops.
+* Loop over cells helper.
+* Work with non-square grids.
+* Performance bottlenecks are the html concat in dom.js and the painting. Need to modify
+  classes rather than completely reinsert grid.

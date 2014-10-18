@@ -10,10 +10,11 @@ define(['helpers'], function(helpers) {
     this.size = Math.round(size);
     this.array = new Array(this.size);
 
-    // TODO add context to helpers.each
-    for (var i = 0; i < this.size; i++) {
-      this.array[i] = new Array(this.size);
-    }
+    helpers.each(this.array, function(x) {
+      // TODO use function(i, row) { row = ...} ?
+      // Like line 34. Copying object not reference to it?
+      this.array[x] = new Array(this.size);
+    }, this);
 
     return this;
   }
@@ -24,13 +25,17 @@ define(['helpers'], function(helpers) {
 
   Grid.prototype.setArray = function(array) {
     this.array = array;
+    this.size = this.array.length;
+    return this;
   };
 
   Grid.prototype.cloneArray = function() {
-    var newArray = [], i;
-    for (i = 0; i < this.size; i++) {
-      newArray[i] = this.array[i].slice();
-    }
+    var newArray = [];
+
+    helpers.each(this.array, function(x, row) {
+      newArray[x] = row.slice();
+    }, this);
+
     return newArray;
   };
 
@@ -52,14 +57,11 @@ define(['helpers'], function(helpers) {
       return false;
     }
 
-
-    // TODO helper to iterate over rows and cells
-    var i, j;
-    for (i = 0; i < this.array.length; i++) {
-      for (j = 0; j < this.array[i].length; j++) {
-        this.array[i][j] = getBoolean();
-      }
-    }
+    helpers.each(this.array, function(x) {
+      helpers.each(this.array[x], function(y) {
+        this.array[x][y] = getBoolean();
+      }, this);
+    }, this);
 
     return this;
   };
@@ -96,8 +98,8 @@ define(['helpers'], function(helpers) {
     var newArray = this.cloneArray();
 
     // Loop over rows and cells
-    for (var x = 0; x < this.array.length; x++) {
-      for (var y = 0; y < this.array[x].length; y++) {
+    helpers.each(this.array, function(x) {
+      helpers.each(this.array[x], function(y) {
 
         // Get number of alive neighbours
         var neighbours = this.countAliveNeighbours(x, y),
@@ -130,10 +132,15 @@ define(['helpers'], function(helpers) {
 
         }
 
-      }
-    }
+      }, this);
+    }, this);
 
     this.setArray(newArray);
+
+    // TODO returns an object of changes to the grid,
+    // use that to mutate rather than redraw
+
+    return this;
 
   };
 

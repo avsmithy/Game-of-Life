@@ -25,10 +25,9 @@ define(['helpers'], function(helpers) {
   exp.displayGrid = function(grid) {
 
     var gridArr = grid.getArray(),
-        size = gridArr.length; // TODO grid.size...
+        size = grid.size;
 
     // Check for square array
-    // TODO should not repeat this.
     helpers.each(gridArr, function(i, row) {
       if (row.length !== size) {
         throw 'Grid is not a square array';

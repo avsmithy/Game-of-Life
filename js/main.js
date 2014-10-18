@@ -8,8 +8,7 @@ window.onload = require(['dom', 'Grid'], function(dom, Grid) {
   dom.createGridContainer().displayGrid(grid);
 
   var play = function() {
-    grid.step();
-    dom.displayGrid(grid);
+    dom.displayGrid(grid.step());
   };
 
   window.setInterval(play, 50);
