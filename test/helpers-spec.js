@@ -73,6 +73,18 @@ define(['helpers'], function(helpers) {
 
       });
 
+      it('can write back to a contextual object', function() {
+
+        var obj = {string: "HelloWorld"};
+
+        helpers.each(['123'], function(i, val) {
+          this.string = val;
+        }, obj);
+
+        expect(obj.string).toBe("123");
+
+      });
+
     });
 
   });

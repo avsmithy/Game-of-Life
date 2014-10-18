@@ -1,16 +1,13 @@
-define([], function() {
-
-  var array, size;
+define(['helpers'], function(helpers) {
 
   // Constructor for 2d array
   function Grid(size) {
 
-    size = Math.round(size);
     if (typeof size !== 'number' || size < 1) {
       throw 'size must be a number > 0';
     }
 
-    this.size = size;
+    this.size = Math.round(size);
     this.array = new Array(this.size);
 
     // TODO add context to helpers.each
@@ -69,7 +66,7 @@ define([], function() {
 
   Grid.prototype.countAliveNeighbours = function(x, y) {
 
-    var alive = 0, i = 0, j = 0;
+    var alive = 0, i = 0, j = 0,
 
         // Set limits on loop (don't want to go over edges of grid)
 
@@ -78,8 +75,8 @@ define([], function() {
         yMin = (y - 1 >= 0) ? y - 1 : 0,
 
         // Maximum of array length, -1 to correct .length to array index
-        xMax = (x + 1 <= this.size - 1) ? x + 1 : this.size - 1,
-        yMax = (y + 1 <= this.size - 1) ? y + 1 : this.size - 1;
+        xMax = (x + 1 <= this.size - 1) ? x + 1 : (this.size - 1),
+        yMax = (y + 1 <= this.size - 1) ? y + 1 : (this.size - 1);
 
     for (i = xMin; i <= xMax; i++) {
       for (j = yMin; j <= yMax; j++) {
