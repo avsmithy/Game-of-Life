@@ -37,7 +37,7 @@ define(['Grid'], function(Grid) {
         var grid = new Grid(3),
             array = grid.getArray();
 
-        expect(array[0]).toEqual([undefined, undefined, undefined]);
+        expect(array[0]).toEqual([false, false, false]);
 
       });
     });
@@ -56,14 +56,31 @@ define(['Grid'], function(Grid) {
       });
     });
 
+    describe('.setCell', function() {
+      it('sets a cell', function() {
+
+        var grid = new Grid(3);
+        expect(grid.getArray()[0]).toEqual([false, false, false]);
+
+        grid.setCell(0,0)
+            .setCell(0,1)
+            .setCell(2,1);
+
+        expect(grid.getArray()[0][0]).toEqual(true);
+        expect(grid.getArray()[0][1]).toEqual(true);
+        expect(grid.getArray()[2][1]).toEqual(true);
+
+      });
+    });
+
     describe('.cloneArray', function() {
       it('deep clones the array', function() {
 
-        var newArr, grid = new Grid(2);
-        arr = [ [true, false],
-                [false, true]];
+        var newArr,
+            grid = new Grid(2);
 
-        grid.setArray(arr);
+        grid.setCell(0, 0)
+            .setCell(1,1);
 
         // Clone the original grid
         newArr = grid.cloneArray();
@@ -73,7 +90,7 @@ define(['Grid'], function(Grid) {
         expect(newArr).toEqual([[false, false],[false, true]]);
 
         // Expect the original to not be modifed
-        expect(grid.getArray()).toEqual(arr);
+        expect(grid.getArray()[0][0]).toEqual(true);
 
       });
     });

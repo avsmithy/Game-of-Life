@@ -11,9 +11,16 @@ define(['helpers'], function(helpers) {
     this.array = new Array(this.size);
 
     helpers.each(this.array, function(x) {
+
       // TODO use function(i, row) { row = ...} ?
       // Like line 34. Copying object not reference to it?
       this.array[x] = new Array(this.size);
+
+      // ES6 .fill()...
+      helpers.each(this.array[x], function(y) {
+        this.array[x][y] = false;
+      }, this);
+
     }, this);
 
     return this;
@@ -26,6 +33,12 @@ define(['helpers'], function(helpers) {
   Grid.prototype.setArray = function(array) {
     this.array = array;
     this.size = this.array.length;
+    return this;
+  };
+
+  Grid.prototype.setCell = function(x, y, value) {
+    value = (typeof value === 'undefined') ? true: value;
+    this.array[x][y] = (value) ? true : false;
     return this;
   };
 
