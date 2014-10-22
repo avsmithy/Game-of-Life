@@ -1,4 +1,4 @@
-define(['Grid'], function(Grid) {
+define(['grid'], function(Grid) {
   describe("Grid", function() {
 
     // TODO make dryer
