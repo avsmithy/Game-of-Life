@@ -32,7 +32,7 @@ define(['grid'], function(Grid) {
     });
 
     describe('.getArray', function() {
-      it('get a 2d array', function() {
+      it('gets a 2d array', function() {
 
         var grid = new Grid(3),
             array = grid.getArray();
@@ -45,13 +45,12 @@ define(['grid'], function(Grid) {
     describe('.setArray', function() {
       it('sets the array', function() {
 
-        var grid = new Grid(3),
-            arr = [ [true, false, true],
-                    [false, false, false],
-                    [false, false, false]];
+        var grid = new Grid(2),
+            arr = [ [true, false],
+                    [false, false] ];
 
         grid.setArray(arr);
-        expect(grid.getArray()[0]).toEqual([true, false, true]);
+        expect(grid.getArray()).toEqual(arr);
 
       });
     });
@@ -59,16 +58,20 @@ define(['grid'], function(Grid) {
     describe('.setCell', function() {
       it('sets a cell', function() {
 
-        var grid = new Grid(3);
-        expect(grid.getArray()[0]).toEqual([false, false, false]);
+        var grid = new Grid(2);
+        expect(grid.getArray()).toEqual([
+          [false, false],
+          [false, false]
+        ]);
 
         grid.setCell(0,0)
-            .setCell(0,1)
-            .setCell(2,1);
+            .setCell(1,0)
+            .setCell(1,1);
 
-        expect(grid.getArray()[0][0]).toEqual(true);
-        expect(grid.getArray()[0][1]).toEqual(true);
-        expect(grid.getArray()[2][1]).toEqual(true);
+        expect(grid.getArray()).toEqual([
+          [true, true],
+          [false, true]
+        ]);
 
       });
     });

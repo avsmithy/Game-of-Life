@@ -1,4 +1,4 @@
-define(['dom', 'Grid'], function(dom, Grid) {
+define(['dom'], function(dom) {
   describe('Dom', function() {
 
     var doc = document;
@@ -24,63 +24,60 @@ define(['dom', 'Grid'], function(dom, Grid) {
       expect(doc.querySelector('.grid')).toBe(null);
     });
 
-    describe('#displayGrid', function() {
+    describe('#makeGrid', function() {
 
-      it('rejects non-square arrays', function() {
+      it('makes a blank 2d square grid in the dom', function() {
 
-        var grid = new Grid(3);
-
-        var arr = [
-                    [false, false, false],
-                    [true, false, true, true],
-                    [false, true, true]
-                  ];
-        grid.setArray(arr);
-
-        expect(function() {
-          dom.displayGrid(grid);
-        }).toThrow();
-
-        arr = [
-                [false, false],
-                [true, true],
-                [false, true]
-              ];
-        grid.setArray(arr);
-
-        expect(function() {
-          dom.displayGrid(grid);
-        }).toThrow();
+        dom.createGridContainer().makeGrid(100);
+        expect(doc.querySelectorAll('.row').length).toBe(100);
+        expect(doc.querySelectorAll('.entity').length).toBe(10000);
+        expect(doc.querySelectorAll('.alive').length).toBe(0);
 
       });
 
-      it('takes a truthy/falsy 2d array and display it', function() {
+      it('makes a blank 2d rectangle grid in the dom', function() {
 
-        var checkAlive = function(el) {
-          for (var i = 0; i < el.classList.length; i++) {
-            if (el.classList[i] === 'alive') {
-              return true;
-            }
-          }
-          return false;
-        };
+        dom.createGridContainer().makeGrid(100, 50);
+        expect(doc.querySelectorAll('.row').length).toBe(50);
+        expect(doc.querySelectorAll('.entity').length).toBe(5000);
+        expect(doc.querySelectorAll('.alive').length).toBe(0);
 
-        var arr = [ [false, false, false],
-                    [true, false, true],
-                    [false, true, true]];
+      });
 
-        var grid = new Grid(3);
-        grid.setArray(arr);
-        dom.createGridContainer().displayGrid(grid);
+      it('adds unique ids to each cell', function() {
 
-        var rows = doc.querySelectorAll('.row');
-        expect(rows.length).toBe(3);
-        expect(checkAlive(rows[0].firstChild)).toBe(false);
-        expect(checkAlive(rows[0].lastChild)).toBe(false);
-        expect(checkAlive(rows[1].firstChild)).toBe(true);
-        expect(checkAlive(rows[1].lastChild)).toBe(true);
-        expect(checkAlive(rows[2].firstChild)).toBe(false);
-        expect(checkAlive(rows[2].lastChild)).toBe(true);
+        dom.createGridContainer().makeGrid(100, 50);
+
+        expect(doc.querySelectorAll('#x0y0').length).toBe(1);
+        expect(doc.querySelectorAll('#x1y1').length).toBe(1);
+
+        // Zero indexed
+        expect(doc.querySelectorAll('#x100y50').length).toBe(0);
+
+      });
+
+    });
+
+    describe('#updateGrid', function() {
+
+      it('changes the values in the grid', function() {
+
+        dom.createGridContainer().makeGrid(2, 2);
+
+        expect(doc.querySelector('#x0y0').classList.contains('alive')).toBe(false);
+        expect(doc.querySelector('#x0y1').classList.contains('alive')).toBe(false);
+        expect(doc.querySelector('#x1y0').classList.contains('alive')).toBe(false);
+        expect(doc.querySelector('#x1y1').classList.contains('alive')).toBe(false);
+
+        dom.updateGrid([
+          [true, true],
+          [false, true]
+        ]);
+
+        expect(doc.querySelector('#x0y0').classList.contains('alive')).toBe(true);
+        expect(doc.querySelector('#x0y1').classList.contains('alive')).toBe(false);
+        expect(doc.querySelector('#x1y0').classList.contains('alive')).toBe(true);
+        expect(doc.querySelector('#x1y1').classList.contains('alive')).toBe(true);
 
       });
 

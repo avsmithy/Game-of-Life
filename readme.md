@@ -1,6 +1,4 @@
 Todo
 ----
-* Loop over cells helper.
+* Factor out 2d-array component from grid.
 * Work with non-square grids.
-* Performance bottlenecks are the html concat in dom.js and the painting. Need to modify
-  classes rather than completely reinsert grid.

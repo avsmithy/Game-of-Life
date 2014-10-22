@@ -16,6 +16,6 @@
   "predef": [
     "window", "document", "console",
     "define", "require", "requirejs",
-    "describe", "it", "expect", "pending", "done", "beforeEach", "afterEach"
+    "describe", "it", "expect", "pending", "done", "beforeEach", "afterEach", "xit"
   ]
 }

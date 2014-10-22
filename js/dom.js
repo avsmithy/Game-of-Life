@@ -21,41 +21,43 @@ define(['helpers'], function(helpers) {
     return this;
   };
 
-  // Takes in a 2d array of truthy/falsy values and displays it
-  exp.displayGrid = function(grid) {
+  // Adds a grid to the page
+  exp.makeGrid = function(width, height) {
 
-    var gridArr = grid.getArray(),
-        size = grid.size;
+    height = (typeof height === 'undefined') ? width : height;
 
-    // Check for square array
-    helpers.each(gridArr, function(i, row) {
-      if (row.length !== size) {
-        throw 'Grid is not a square array';
-      }
-    });
+    var i, j,
+        html = [];
 
-    // Loop over rows and then items in rows
-    var html = [];
-    helpers.each(gridArr, function(i, row) {
+    for (i = 0; i < height; i++) {
 
       html.push('<div class="row">');
 
-      helpers.each(row, function(i, cell) {
-
-        // If value in array is truthy
-        if (cell) {
-          // Push to html
-          html.push('<div class="entity alive"></div>');
-        } else {
-          html.push('<div class="entity"></div>');
-        }
-      });
+      for (j = 0; j < width; j++) {
+        html.push('<div id="x' + j + 'y' + i + '" class="entity"></div>');
+      }
 
       html.push('</div>');
+    }
+
+    el.innerHTML = html.join('');
+    return this;
+  };
+
+  exp.updateGrid = function(array) {
+
+    helpers.each(array, function(y, row) {
+      helpers.each(row, function(x, cell) {
+
+        if (cell) {
+          el.querySelector('#x' + x + 'y' + y).classList.add('alive');
+        } else {
+          el.querySelector('#x' + x + 'y' + y).classList.remove('alive');
+        }
+
+      });
     });
 
-    // Display in DOM
-    el.innerHTML = html.join('');
     return this;
   };
 

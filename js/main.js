@@ -7,12 +7,13 @@ function(dom, Grid, patterns) {
 
   var grid = patterns.gun(new Grid(100));
 
-  dom.createGridContainer().displayGrid(grid);
+  dom.createGridContainer().makeGrid(grid.size);
 
   var play = function() {
-    dom.displayGrid(grid.step());
+    dom.updateGrid(grid.step().getArray());
+    window.setTimeout(play, 10);
   };
 
-  window.setInterval(play, 50);
+  window.setTimeout(play, 0);
 
 });
